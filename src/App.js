@@ -4,7 +4,10 @@ import {
   Paper,
   Typography,
   TextField,
-  Button
+  Button,
+  List,
+  ListItem,
+  ListItemText
 } from '@material-ui/core'
 
 class App extends Component {
@@ -20,7 +23,6 @@ class App extends Component {
       e.preventDefault();
 
     if (this.state.title) {
-      console.log(this.state.title)
       this.setState({
         excercises: [...this.state.excercises, {title: this.state.title, id: Date.now()}],
         title: ''
@@ -28,7 +30,7 @@ class App extends Component {
     }
   }
   render(){
-    const { title } = this.state
+    const { title, excercises } = this.state
     return (
       <Paper>
       <Typography variant="display2" align='center' gutterBottom>
@@ -38,7 +40,9 @@ class App extends Component {
         <TextField name="title" label="Exercise" value={title} onChange={this.handleChange} margin='normal'/>
         <Button type='submit' color='primary' variant='fab' size='medium'> Create </Button>
       </form>
-
+      <List>
+        {excercises.map((excercise, id) => <ListItem key={id}> <ListItemText primary={excercise.title}/> </ListItem>)}
+      </List>
     </Paper>
     )
   }
