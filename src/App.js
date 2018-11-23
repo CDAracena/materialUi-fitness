@@ -1,27 +1,33 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {
+  Paper,
+  Typography,
+  TextField,
+  Button
+} from '@material-ui/core'
 
 class App extends Component {
-  render() {
+  state = {
+    excercises: [],
+    title: ''
+  }
+    handleChange = ({ target: {name, value}}) => {
+      this.setState({
+        [name]: value
+      })
+    }
+  render(){
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
+      <Paper>
+      <Typography variant="display2" align='center' gutterBottom>
+        Exercises
+      </Typography>
+      <form>
+        <TextField name="title" label="Exercise" value={this.state.title} onChange={this.handleChange} margin='normal'/>
+      </form>
+    </Paper>
+    )
   }
 }
 
