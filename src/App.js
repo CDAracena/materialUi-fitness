@@ -14,6 +14,9 @@ import {
 } from '@material-ui/core';
 import DeleteForever from '@material-ui/icons/DeleteForever';
 import { withStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { addingTitle, deleteEx } from './actions/index';
+
 
 
 const style = (theme) => ({
@@ -29,45 +32,41 @@ const style = (theme) => ({
   }
 });
 
+
 class App extends Component {
   state = {
-    excercises: [],
     title: ''
   }
-    handleChange = (input) => {
-      this.setState({title: input.target.value})
-    }
 
-    handleCreate = e => {
-      e.preventDefault();
-
-    if (this.state.title) {
-      this.setState({
-        excercises: [...this.state.excercises, {title: this.state.title, id: Date.now()}],
-        title: ''
-      })
-    }
+  setTitle = e => {
+    this.setState({title: e.target.value})
   }
 
-  handleDelete = (excerciseId) => {
-    const filteredExcercises = this.state.excercises.filter(item => item.id !== excerciseId)
-    this.setState({excercises: filteredExcercises})
+setChange(e){
+  e.preventDefault()
+  if (this.state.title) {
+  this.props.newExcercise(this.state.title)
   }
+}
+
+setDelete(id){
+  this.props.deleteEx(id)
+}
   render(){
-    const { title, excercises } = this.state
-    const { classes } = this.props
-    return (
+    const { classes, excercises } = this.props
+     return (
       <Paper className={classes.root}>
-      <Typography variant="display2" align='center' gutterBottom>
+      <Typography variant="display2" align='center' gutterBottom color="primary">
         Exercises
       </Typography>
-      <form onSubmit={this.handleCreate} className={classes.form}>
-        <TextField name="title" label="Excercise" value={title} onChange={this.handleChange} margin='normal'/>
-        <Button type='submit' color='primary' variant='fab' size='medium'> Create </Button>
+      <form className={classes.form}>
+        <TextField name="title" label="Excercise"  margin='normal' onChange={this.setTitle}/>
+        <Button type='submit' color='primary' variant='fab' size='medium' onClick={(e)=> this.setChange(e)}> Create </Button>
       </form>
       <List>
-        {excercises.map((excercise, id) => <ListItem key={id}> <ListItemText primary={excercise.title}/>
-        <ListItemSecondaryAction><IconButton color='primary' onClick={()=> this.handleDelete(excercise.id)}> <DeleteForever color='secondary'/> </IconButton> </ListItemSecondaryAction>
+        {excercises.map((excercise, id) =>
+          <ListItem key={id}> <ListItemText primary={excercise.title}/>
+        <ListItemSecondaryAction><IconButton color='primary' onClick={() => this.setDelete(excercise.id)}> <DeleteForever color='secondary'/> </IconButton> </ListItemSecondaryAction>
        </ListItem>)}
       </List>
     </Paper>
@@ -75,4 +74,18 @@ class App extends Component {
   }
 }
 
-export default withStyles(style)(App);
+const mapStateToProps = ({excercises, title}) => {
+  return {
+    excercises, title
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+    return {
+      newExcercise: (item) => dispatch(addingTitle(item)),
+      deleteEx: (id) => dispatch(deleteEx(id))
+    }
+  }
+
+
+export default withStyles(style)(connect(mapStateToProps, mapDispatchToProps)(App));
